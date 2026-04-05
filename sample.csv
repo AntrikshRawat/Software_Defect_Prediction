@@ -1,2 +1,0 @@
-Lines of Code (LOC),Cyclomatic Complexity (v(g)),Essential Complexity (ev(g)),Design Complexity (iv(g)),Halstead Length (n),Halstead Volume (v),Halstead Program Length (l),Halstead Difficulty (d),Halstead Intelligence (i),Halstead Effort (e),Halstead Delivered Bugs (b),Halstead Time Estimator (t),Lines of Executable Code,Lines of Comments,Lines of Blank Space,Lines of Code & Comments,Unique Operators,Unique Operands,Total Operators,Total Operands,Branch Count
-450,45,20,35,1200,8500,0.02,60,120,510000,2.8,28333,380,40,30,5,35,80,700,500,80
