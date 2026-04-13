@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_from_directory
 import joblib
 import pandas as pd
 import io
@@ -13,6 +13,11 @@ import seaborn as sns
 from code_parser import extract_metrics
 
 app = Flask(__name__)
+
+
+@app.route('/style.css')
+def style_css():
+    return send_from_directory('templates', 'style.css')
 
 model = joblib.load('rf_model.pkl')
 
@@ -74,6 +79,9 @@ def generate_single_gauge_plot(probability, threshold):
 def home():
     result = None
     extracted_data = None # To show users the metrics we found
+    result_tab = None
+    code_filename = None
+    csv_filename = None
     
     if request.method == 'POST':
         action = request.form.get('action') # Identifies which form was submitted
@@ -85,10 +93,13 @@ def home():
                 # Check for file upload first
                 if 'code_file' in request.files and request.files['code_file'].filename != '':
                     file = request.files['code_file']
+                    code_filename = file.filename
                     code_string = file.read().decode("utf-8", errors='ignore')
+                    result_tab = 'file-tab'
                 # If no file, check the text box
                 elif request.form.get('pasted_code', '').strip() != '':
                     code_string = request.form.get('pasted_code')
+                    result_tab = 'snippet-tab'
                 
                 if not code_string:
                     raise Exception("No code detected. Please paste code or upload a file.")
@@ -117,10 +128,15 @@ def home():
 
             # === WORKFLOW 2: BULK CSV ===
             elif action == 'bulk_csv':
+                result_tab = 'csv-tab'
                 if 'csv_file' not in request.files or request.files['csv_file'].filename == '':
                     raise Exception("No CSV file selected.")
                 file = request.files['csv_file']
+                csv_filename = file.filename
                 df = pd.read_csv(io.StringIO(file.stream.read().decode("utf-8", errors='ignore')))
+                missing_columns = [col for col in feature_names if col not in df.columns]
+                if missing_columns:
+                    raise Exception("The file columns do not contain the required columns.")
                 df = df[feature_names] 
                 
                 probs = model.predict_proba(df)[:, 1] * 100
@@ -133,9 +149,21 @@ def home():
                 result = {"type": "bulk", "data": bulk_results, "plot_url": plot_b64}
                 
         except Exception as e:
+            if action == 'bulk_csv':
+                result_tab = 'csv-tab'
+            elif action == 'parse_code' and result_tab is None:
+                result_tab = 'snippet-tab'
             result = {"error": f"Error: {str(e)}"}
 
-    return render_template('index.html', result=result, feature_names=feature_names, extracted_data=extracted_data)
+    return render_template(
+        'index.html',
+        result=result,
+        feature_names=feature_names,
+        extracted_data=extracted_data,
+        result_tab=result_tab,
+        code_filename=code_filename,
+        csv_filename=csv_filename
+    )
 
 if __name__ == '__main__':
     app.run(debug=True)
