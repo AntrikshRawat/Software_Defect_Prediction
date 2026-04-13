@@ -24,7 +24,7 @@ Ensure you have Python 3.8+ installed on your machine.
 
 ### 1. Clone the repository
 ```bash
-git clone [https://github.com/YOUR_USERNAME/software-defect-analyzer.git](https://github.com/YOUR_USERNAME/software-defect-analyzer.git)
+git clone [https://github.com/AntrikshRawat/software-defect-analyzer.git](https://github.com/AntrikshRawat/software-defect-analyzer.git)
 cd software-defect-analyzer
 ```
 
