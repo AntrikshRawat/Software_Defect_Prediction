@@ -131,27 +131,7 @@ def home():
                 
                 plot_b64 = generate_bulk_plots(probs, bulk_results)
                 result = {"type": "bulk", "data": bulk_results, "plot_url": plot_b64}
-
-            # === WORKFLOW 3: MANUAL METRICS ===
-            elif action == 'manual_entry':
-                input_data = {}
-                for feature in feature_names:
-                    val = request.form.get(feature, 0.0)
-                    input_data[feature] = [float(val)]
                 
-                df = pd.DataFrame(input_data)
-                prob_defective = model.predict_proba(df)[0][1] * 100
-                is_high_risk = prob_defective > 35
-                single_plot_b64 = generate_single_gauge_plot(prob_defective, 35) 
-                
-                result = {
-                    "type": "single",
-                    "probability": f"{prob_defective:.1f}%",
-                    "status": "High Risk - Code Review Recommended" if is_high_risk else "Low Risk - Metrics Stable",
-                    "is_high_risk": is_high_risk,
-                    "plot_url": single_plot_b64 
-                }
-
         except Exception as e:
             result = {"error": f"Error: {str(e)}"}
 
