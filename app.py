@@ -104,8 +104,8 @@ def home():
                 df = pd.DataFrame([metrics])
                 df = df[feature_names] # Ensure perfect column alignment
                 prob_defective = model.predict_proba(df)[0][1] * 100
-                is_high_risk = prob_defective > 50
-                single_plot_b64 = generate_single_gauge_plot(prob_defective, 50)
+                is_high_risk = prob_defective > 35
+                single_plot_b64 = generate_single_gauge_plot(prob_defective, 35)
                 
                 result = {
                     "type": "single",
@@ -126,7 +126,7 @@ def home():
                 probs = model.predict_proba(df)[:, 1] * 100
                 bulk_results = []
                 for p in probs:
-                    is_high = p > 50
+                    is_high = p > 35
                     bulk_results.append({"probability": f"{p:.1f}%", "status": "High Risk" if is_high else "Low Risk", "is_high_risk": is_high})
                 
                 plot_b64 = generate_bulk_plots(probs, bulk_results)
@@ -141,8 +141,8 @@ def home():
                 
                 df = pd.DataFrame(input_data)
                 prob_defective = model.predict_proba(df)[0][1] * 100
-                is_high_risk = prob_defective > 50
-                single_plot_b64 = generate_single_gauge_plot(prob_defective, 50)
+                is_high_risk = prob_defective > 35
+                single_plot_b64 = generate_single_gauge_plot(prob_defective, 35) 
                 
                 result = {
                     "type": "single",
