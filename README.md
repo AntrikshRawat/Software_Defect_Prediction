@@ -24,8 +24,8 @@ Ensure you have Python 3.8+ installed on your machine.
 
 ### 1. Clone the repository
 ```bash
-git clone [https://github.com/AntrikshRawat/software-defect-analyzer.git](https://github.com/AntrikshRawat/software-defect-analyzer.git)
-cd software-defect-analyzer
+git clone [https://github.com/AntrikshRawat/Software_Defect_Prediction.git](https://github.com/AntrikshRawat/Software_Defect_Prediction.git)
+cd Software_Defect_Prediction
 ```
 
 ### 2. Install dependencies
